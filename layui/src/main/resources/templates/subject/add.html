@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="/layui-style/lib/layui-v2.6.3/css/layui.css" media="all" rel="stylesheet">
+    <link href="/layui-style/css/public.css" media="all" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专题名称</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-reqtext="名称不能为空" lay-verify="required" name="subject_title"
+                   placeholder="请输入专题名称"
+                   type="text" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专题描述</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-reqtext="描述不能为空" lay-verify="required" name="subject_desc"
+                   placeholder="请输入专题描述"
+                   type="text" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专题Banner</label>
+        <div class="layui-input-block">
+            <button id="test1" class="layui-btn" lay-reqtext="专题Banner不能为空" name="subject_banner"
+                    type="button" value="">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+            <img alt="" class="upload-img-show" src="" style="width: 50px ;height: 50px;display: none">
+            <!--            <input type="text" name="subject_banner" lay-verify="required" lay-reqtext="专题Banner不能为空"
+                               placeholder="请输入专题Banner" value="" class="layui-input">-->
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">状态</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-reqtext="专题状态" lay-skin="switch" lay-verify="required" name="subject_status"
+                   type="checkbox"
+                   value="1">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea" name="remark" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-filter="saveBtn" lay-submit>确认保存</button>
+        </div>
+    </div>
+</div>
+<script charset="utf-8" src="/layui-style/lib/layui-v2.6.3/layui.js"></script>
+<script>
+
+    //转码方法
+    function convertBase64UrlToBlob(baseData, urlData) {
+        let base = atob(baseData.substring(baseData.indexOf(',') + 1));
+        let length = base.length;
+        let url = new Uint8Array(length);
+        while (length--) {
+            url[length] = base.charCodeAt(length);
+        }
+        let file = new File([url], 'a.jpg', {
+            type: 'image/jpg'
+        })
+        return file
+    }
+
+    const imgShow = document.querySelector('.upload-img-show')
+    const uploadBtn = document.querySelector('#test1')
+    let url
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            , url: '/' //上传接口,
+            , auto: false
+            , choose: function (obj) {
+                //将每次选择的文件追加到文件队列
+
+                //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                obj.preview(function (index, file, result) {
+                    console.log(file)
+                    // console.log(result)
+                    // console.log(file); //得到文件对象
+                    var files = obj.pushFile();
+                    const imgURL = URL.createObjectURL(convertBase64UrlToBlob(result))
+                    imgShow.src = imgURL
+                    imgShow.style.display = 'inline-block'
+                    url = imgURL
+                });
+            }
+        });
+    });
+
+
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            data.field.subject_banner = url
+
+            $.ajax({
+                url: '/subject/upload',
+                type: 'POST',
+                async: true,
+                contentType: "application/json",
+                dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
+                data: JSON.stringify({list: ['D:\\360downloads\\' + data.field.file.split('C:\\fakepath\\')[1]]}),
+                success: function (result) {
+                    data.field.subject_banner = result.result[0]
+                },
+                error: function () {
+                    data.field.subject_banner = url
+                }
+            });
+
+
+            var index = layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            }, function () {
+                $.ajax({
+                    url: '/subject/addSuj',
+                    type: 'POST',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(data.field),
+                    success: function (result) {
+                        if (result.code == 0) {
+                            setTimeout(function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                window.parent.location.href = "/subject/list";
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                            }, 300);
+                        } else {
+                            layer.msg("操作失败！", {icon: 5});
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

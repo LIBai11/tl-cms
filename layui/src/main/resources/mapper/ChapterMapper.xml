@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsq.mapper.ChapterMapper">
+
+    <select id="getChapter" parameterType="Chapter" resultType="Chapter">
+        select *
+        from oc_course_section
+        where del_flag = 0 and course_id = #{course_id} and parent_id = 0
+        order by order_by desc
+    </select>
+
+</mapper>

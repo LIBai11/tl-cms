@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="/layui-style/lib/layui-v2.6.3/css/layui.css" media="all" rel="stylesheet">
+    <link href="/layui-style/css/public.css" media="all" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<!--<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">子章节名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="subject_title" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入专题名称" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专题描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="subject_desc" lay-verify="required" lay-reqtext="描述不能为空" placeholder="请输入专题描述" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专题Banner</label>
+        <div class="layui-input-block">
+            <input type="text" name="subject_banner" lay-verify="required" lay-reqtext="专题Banner不能为空" placeholder="请输入专题Banner" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">状态</label>
+        <div class="layui-input-block">
+            <input type="number" name="subject_status" lay-verify="required" lay-reqtext="专题状态" placeholder="请输入状态" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>-->
+<form action="" class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">子章节名称</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" class="layui-input" lay-verify="required" name="section_name" required
+                   type="text">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否允许查看</label>
+        <div class="layui-input-block">
+            <input checked name="can_try" title="是" type="radio" value="0">
+            <input name="can_try" title="否" type="radio" value="1">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">子章节序列</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" class="layui-input" lay-verify="required" name="order_by" required
+                   type="number">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea" name="remark" placeholder="请输入内容"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-filter="formDemo" lay-submit>立即提交</button>
+            <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+        </div>
+    </div>
+</form>
+<script charset="utf-8" src="/layui-style/lib/layui-v2.6.3/layui.js"></script>
+<script>
+    let section_id = [[${section_id}]]
+    let course_id = [[${course_id}]]
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        //提交
+        form.on('submit(formDemo)', function (data) {
+            data.field.section_id = section_id
+            data.field.course_id = course_id
+            var index = layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            }, function () {
+                $.ajax({
+                    url: '/chapter/addSonChapter',
+                    type: 'POST',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(data.field),
+                    success: function (result) {
+                        if (result.code == 0) {
+                            setTimeout(function () {
+                                // 关闭弹出层
+                                layer.close(index);
+                                window.parent.location.href = "/chapter/list/" + course_id;
+                                var iframeIndex = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(iframeIndex);
+                            }, 300);
+                        } else {
+                            layer.msg("操作失败！", {icon: 5});
+                        }
+                    }
+                });
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

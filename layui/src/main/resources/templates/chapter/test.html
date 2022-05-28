@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="/layui-style/lib/layui-v2.6.3/css/layui.css" media="all" rel="stylesheet">
+    <link href="/layui-style/css/public.css" media="all" rel="stylesheet">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+
+                <div class="layui-card-body ">
+                    <div class="demoTable">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input id="demoReload" autocomplete="off" class="layui-input" name="UserName"
+                                   placeholder="请输入菜单名称" type="text">
+                        </div>
+                        <div id="demoTable" class="layui-inline layui-show-xs-block">
+                            <button id="search" class="layui-btn" data-type="reload" lay-filter="sreach" lay-submit="">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-header">
+                    <button id="btnExpandAll" class="layui-btn layui-btn-sm layui-btn-primary">
+                        <i class="layui-icon">&#xe668;</i>展开全部
+                    </button>
+                    <button id="btnFoldAll" class="layui-btn layui-btn-sm layui-btn-primary">
+                        <i class="layui-icon">&#xe66b;</i>折叠全部
+                    </button>
+                    <button id="OpenMenuAdd" class="layui-btn"><i class="layui-icon"></i>添加</button>
+                    @*onclick="xadmin.open('添加用户','/menu/menuAdd',400,450)"*@
+                </div>
+
+                <div class="layui-card-body layui-table-body layui-table-main">
+                    <table id="menu" class="layui-hide" lay-filter="menu"></table>
+                </div>
+
+                <script id="switchTpl" type="text/html">
+                    <!-- 这里的 checked 的状态只是演示 -->
+                    <input id="checkShow" type="checkbox" name="Show" value="{{d.id}}" lay-skin="switch"
+                           lay-text="启用|停用" {{ d.IsShow=="启用"?"checked":"" }} lay-filter="ShowDemo">
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script charset="utf-8" src="/layui-style/lib/layui-v2.6.3/layui.js"></script>
+<script>
+    layui.config({
+        //   base: '/js/'存放treeTable.js的文件夹
+        base: '/js/'
+    }).use(['layer', 'util', 'treeTable'], function () {
+        //var table = layui.table
+        //, form = layui.form;
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var util = layui.util;
+        var treeTable = layui.treeTable, form = layui.form;
+
+        // 渲染表格
+        var insTb = treeTable.render({
+            elem: '#menu',
+            url: '/menu/GetMenu',
+            toolbar: 'default',
+            height: 'full-200',
+            tree: {
+                iconIndex: 2,
+                isPidData: true,
+                idName: 'id',//父ID
+                pidName: 'parentid',//子ID
+                openName: 'open',// 是否默认展开的字段名
+                //public bool open { get; set; }open字段是bool类型
+            },
+            defaultToolbar: ['filter', 'print', 'exports'],
+            cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'id', title: 'ID', fixed: 'left', unresize: true, sort: true, hide: true}
+                    , {field: 'menuname', title: '菜单名称', edit: 'text'}
+                    , {field: 'parentid', title: '父ID', hide: true}
+                    , {field: 'remark', title: '备注', edit: 'text'}
+                    , {field: 'menuurl', title: '菜单路径', hide: true}
+                    , {field: 'orderid', title: '菜单排序', hide: true}
+                    , {field: 'menuico', title: '菜单图标', hide: true}
+                    , {field: 'Isfather', title: '是否父菜单', hide: true}
+                    , {field: 'IsShow', title: '状态', templet: '#switchTpl', unresize: true}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                ]
+            ],
+            style: 'margin-top:0;'
+        });
+
+        //监听状态操作
+        form.on('switch(ShowDemo)', function (data) {
+            var swithcData = data;
+            var id = data.value;// 获取要修改的ID
+            var IsShow = this.checked ? '启用' : '停用';// 当前状态值
+            $.ajax({
+                type: 'post',
+                url: '/api/menuApi/postUpdMenu',
+                data: {
+                    "id": id,
+                    "IsShow": IsShow
+                },
+                error: function (data) {
+                    console.log(data);
+                    layer.msg('数据异常，操作失败！');
+                },
+                // 修改失败，请填写对应的参数
+                success: function (data) {
+                    layer.alert("操作成功", {
+                        icon: 6
+                    });
+                    //window.location.reload();
+                }
+            });
+        });
+
+        //监听行工具事件
+        treeTable.on('tool(menu)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    //var id = data['id'];
+                    var param = {id: data['id']};
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/menuApi/postDeleMenu',
+                        async: false,
+                        data: param,
+                        success: function (data) {
+                        }
+                    })
+                    layer.msg('已删除数据!', {icon: 1, time: 1000});
+                    setTimeout('window.location.reload()', 1000);
+                    //alert(id);
+                });
+            } else if (obj.event === 'edit') {
+                //xadmin.open('修改用户', '/User/UserUpd?id=' + data['id'], 600, 400);//flag=edit&id=
+                layer.open({
+                    type: 2,
+                    title: "修改菜单",
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['600px', '600px'],
+                    content: ['/menu/menuOper?flag=edit&id=' + data['id'], 'no'],
+                    //end: function () { location.reload(); }
+                })
+            }
+        });
+
+        // 全部展开
+        $('#btnExpandAll').click(function () {
+            insTb.expandAll();
+        });
+
+        // 全部折叠
+        $('#btnFoldAll').click(function () {
+            insTb.foldAll();
+        });
+
+    });
+</script>
+
+</body>
+</html>
