@@ -1,0 +1,63 @@
+{
+  "course": [
+    {
+      "courseId": 1,
+      "courseTitle": "JAVA程序设计",
+      "enable": 1,
+      "isFree": 0,
+      "isDiscount": 1,
+      "coursePrice": 10.99,
+      "discountDesc": "限时优惠",
+      "children": [
+        {
+          "sectionId": 1,
+          "courseId": 1,
+          "sectionName": "JAVA的基本数据类型",
+          "remark": "123"
+        },
+        {
+          "sectionId": 2,
+          "courseId": 1,
+          "sectionName": "class关键字",
+          "remark": "123"
+        },
+        {
+          "sectionId": 3,
+          "courseId": 1,
+          "sectionName": "面向对象",
+          "remark": "123"
+        }
+      ]
+    },
+    {
+      "courseId": 2,
+      "courseTitle": "Python程序设计",
+      "enable": 1,
+      "isFree": 1,
+      "isDiscount": 1,
+      "coursePrice": 10.99,
+      "discountDesc": "限时优惠",
+      "children": [
+        {
+          "sectionId": 1,
+          "courseId": 2,
+          "sectionName": "Python的基本数据类型",
+          "remark": "123"
+        },
+        {
+          "sectionId": 2,
+          "courseId": 2,
+          "sectionName": "条件判断",
+          "remark": "123"
+        },
+        {
+          "sectionId": 3,
+          "courseId": 2,
+          "sectionName": "循环的使用",
+          "remark": "123"
+        }
+      ]
+    }
+  ],
+  "counts": 2
+}

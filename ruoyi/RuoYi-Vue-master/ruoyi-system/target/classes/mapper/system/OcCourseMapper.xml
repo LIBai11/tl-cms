@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OcCourseMapper">
+
+    <resultMap type="OcCourse" id="OcCourseResult">
+        <result property="courseId" column="course_id"/>
+        <result property="courseTitle" column="course_title"/>
+        <result property="courseSubtitle" column="course_subtitle"/>
+        <result property="courseDesc" column="course_desc"/>
+        <result property="isFree" column="is_free"/>
+        <result property="coursePrice" column="course_price"/>
+        <result property="isDiscount" column="is_discount"/>
+        <result property="discountDesc" column="discount_desc"/>
+        <result property="discountPrice" column="discount_price"/>
+        <result property="courseLevel" column="course_level"/>
+        <result property="courseCover" column="course_cover"/>
+        <result property="courseBanner" column="course_banner"/>
+        <result property="isCarousel" column="is_carousel"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <result property="isOut" column="is_out"/>
+        <result property="orderBy" column="order_by"/>
+        <result property="showDetail" column="show_detail"/>
+        <result property="remark" column="remark"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdTime" column="CREATED_TIME"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedTime" column="UPDATED_TIME"/>
+    </resultMap>
+
+    <sql id="selectOcCourseVo">
+        select course_id, course_title, course_subtitle, course_desc, is_free, course_price, is_discount, discount_desc,
+        discount_price, course_level, course_cover, course_banner, is_carousel, is_recommend, is_out, order_by,
+        show_detail, remark, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from oc_course
+    </sql>
+
+    <select id="selectOcCourseList" parameterType="OcCourse" resultMap="OcCourseResult">
+        <include refid="selectOcCourseVo"/>
+        <where>
+            <if test="courseTitle != null  and courseTitle != ''">and course_title = #{courseTitle}</if>
+            <if test="courseSubtitle != null  and courseSubtitle != ''">and course_subtitle = #{courseSubtitle}</if>
+            <if test="courseDesc != null  and courseDesc != ''">and course_desc = #{courseDesc}</if>
+            <if test="isFree != null  and isFree != ''">and is_free = #{isFree}</if>
+            <if test="coursePrice != null ">and course_price = #{coursePrice}</if>
+            <if test="isDiscount != null  and isDiscount != ''">and is_discount = #{isDiscount}</if>
+            <if test="discountDesc != null  and discountDesc != ''">and discount_desc = #{discountDesc}</if>
+            <if test="discountPrice != null ">and discount_price = #{discountPrice}</if>
+            <if test="courseLevel != null  and courseLevel != ''">and course_level = #{courseLevel}</if>
+            <if test="courseCover != null ">and course_cover = #{courseCover}</if>
+            <if test="courseBanner != null ">and course_banner = #{courseBanner}</if>
+            <if test="isCarousel != null  and isCarousel != ''">and is_carousel = #{isCarousel}</if>
+            <if test="isRecommend != null  and isRecommend != ''">and is_recommend = #{isRecommend}</if>
+            <if test="isOut != null  and isOut != ''">and is_out = #{isOut}</if>
+            <if test="orderBy != null ">and order_by = #{orderBy}</if>
+            <if test="showDetail != null  and showDetail != ''">and show_detail = #{showDetail}</if>
+            <if test="createdBy != null  and createdBy != ''">and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null ">and CREATED_TIME = #{createdTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''">and UPDATED_BY = #{updatedBy}</if>
+            <if test="updatedTime != null ">and UPDATED_TIME = #{updatedTime}</if>
+        </where>
+    </select>
+
+    <select id="selectOcCourseByCourseId" parameterType="Long" resultMap="OcCourseResult">
+        <include refid="selectOcCourseVo"/>
+        where course_id = #{courseId}
+    </select>
+
+    <insert id="insertOcCourse" parameterType="OcCourse" useGeneratedKeys="true" keyProperty="courseId">
+        insert into oc_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseTitle != null">course_title,</if>
+            <if test="courseSubtitle != null">course_subtitle,</if>
+            <if test="courseDesc != null">course_desc,</if>
+            <if test="isFree != null">is_free,</if>
+            <if test="coursePrice != null">course_price,</if>
+            <if test="isDiscount != null">is_discount,</if>
+            <if test="discountDesc != null">discount_desc,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="courseLevel != null">course_level,</if>
+            <if test="courseCover != null">course_cover,</if>
+            <if test="courseBanner != null">course_banner,</if>
+            <if test="isCarousel != null">is_carousel,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="isOut != null">is_out,</if>
+            <if test="orderBy != null">order_by,</if>
+            <if test="showDetail != null">show_detail,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseTitle != null">#{courseTitle},</if>
+            <if test="courseSubtitle != null">#{courseSubtitle},</if>
+            <if test="courseDesc != null">#{courseDesc},</if>
+            <if test="isFree != null">#{isFree},</if>
+            <if test="coursePrice != null">#{coursePrice},</if>
+            <if test="isDiscount != null">#{isDiscount},</if>
+            <if test="discountDesc != null">#{discountDesc},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+            <if test="courseLevel != null">#{courseLevel},</if>
+            <if test="courseCover != null">#{courseCover},</if>
+            <if test="courseBanner != null">#{courseBanner},</if>
+            <if test="isCarousel != null">#{isCarousel},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="isOut != null">#{isOut},</if>
+            <if test="orderBy != null">#{orderBy},</if>
+            <if test="showDetail != null">#{showDetail},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOcCourse" parameterType="OcCourse">
+        update oc_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseTitle != null">course_title = #{courseTitle},</if>
+            <if test="courseSubtitle != null">course_subtitle = #{courseSubtitle},</if>
+            <if test="courseDesc != null">course_desc = #{courseDesc},</if>
+            <if test="isFree != null">is_free = #{isFree},</if>
+            <if test="coursePrice != null">course_price = #{coursePrice},</if>
+            <if test="isDiscount != null">is_discount = #{isDiscount},</if>
+            <if test="discountDesc != null">discount_desc = #{discountDesc},</if>
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
+            <if test="courseLevel != null">course_level = #{courseLevel},</if>
+            <if test="courseCover != null">course_cover = #{courseCover},</if>
+            <if test="courseBanner != null">course_banner = #{courseBanner},</if>
+            <if test="isCarousel != null">is_carousel = #{isCarousel},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="isOut != null">is_out = #{isOut},</if>
+            <if test="orderBy != null">order_by = #{orderBy},</if>
+            <if test="showDetail != null">show_detail = #{showDetail},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where course_id = #{courseId}
+    </update>
+
+    <delete id="deleteOcCourseByCourseId" parameterType="Long">
+        delete from oc_course where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteOcCourseByCourseIds" parameterType="String">
+        delete from oc_course where course_id in
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+</mapper>

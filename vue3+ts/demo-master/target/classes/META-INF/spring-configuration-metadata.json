@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "fastdfs",
+      "type": "com.example.demo.config.FastDfsConstant",
+      "sourceType": "com.example.demo.config.FastDfsConstant"
+    }
+  ],
+  "properties": [
+    {
+      "name": "fastdfs.domain",
+      "type": "java.lang.String",
+      "sourceType": "com.example.demo.config.FastDfsConstant"
+    }
+  ],
+  "hints": []
+}

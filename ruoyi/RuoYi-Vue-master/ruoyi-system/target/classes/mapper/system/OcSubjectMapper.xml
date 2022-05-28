@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OcSubjectMapper">
+
+    <resultMap type="OcSubject" id="OcSubjectResult">
+        <result property="subjectId" column="subject_id"/>
+        <result property="subjectTitle" column="subject_title"/>
+        <result property="subjectDesc" column="subject_desc"/>
+        <result property="subjectBanner" column="subject_banner"/>
+        <result property="orderBy" column="order_by"/>
+        <result property="subjectStatus" column="subject_status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdTime" column="CREATED_TIME"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedTime" column="UPDATED_TIME"/>
+        <result property="enable" column="enable"/>
+    </resultMap>
+
+    <sql id="selectOcSubjectVo">
+        select subject_id, subject_title, subject_desc, subject_banner, order_by, subject_status, del_flag, remark,
+        CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, enable from oc_subject
+    </sql>
+
+    <select id="selectOcSubjectList" parameterType="OcSubject" resultMap="OcSubjectResult">
+        <include refid="selectOcSubjectVo"/>
+        <where>
+            <if test="subjectTitle != null  and subjectTitle != ''">and subject_title = #{subjectTitle}</if>
+            <if test="subjectDesc != null  and subjectDesc != ''">and subject_desc = #{subjectDesc}</if>
+            <if test="subjectBanner != null ">and subject_banner = #{subjectBanner}</if>
+            <if test="orderBy != null ">and order_by = #{orderBy}</if>
+            <if test="subjectStatus != null  and subjectStatus != ''">and subject_status = #{subjectStatus}</if>
+            <if test="createdBy != null  and createdBy != ''">and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null ">and CREATED_TIME = #{createdTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''">and UPDATED_BY = #{updatedBy}</if>
+            <if test="updatedTime != null ">and UPDATED_TIME = #{updatedTime}</if>
+            <if test="enable != null ">and enable = #{enable}</if>
+        </where>
+    </select>
+
+    <select id="selectOcSubjectBySubjectId" parameterType="Long" resultMap="OcSubjectResult">
+        <include refid="selectOcSubjectVo"/>
+        where subject_id = #{subjectId}
+    </select>
+
+    <insert id="insertOcSubject" parameterType="OcSubject" useGeneratedKeys="true" keyProperty="subjectId">
+        insert into oc_subject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectTitle != null">subject_title,</if>
+            <if test="subjectDesc != null">subject_desc,</if>
+            <if test="subjectBanner != null">subject_banner,</if>
+            <if test="orderBy != null">order_by,</if>
+            <if test="subjectStatus != null">subject_status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+            <if test="enable != null">enable,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectTitle != null">#{subjectTitle},</if>
+            <if test="subjectDesc != null">#{subjectDesc},</if>
+            <if test="subjectBanner != null">#{subjectBanner},</if>
+            <if test="orderBy != null">#{orderBy},</if>
+            <if test="subjectStatus != null">#{subjectStatus},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+            <if test="enable != null">#{enable},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOcSubject" parameterType="OcSubject">
+        update oc_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subjectTitle != null">subject_title = #{subjectTitle},</if>
+            <if test="subjectDesc != null">subject_desc = #{subjectDesc},</if>
+            <if test="subjectBanner != null">subject_banner = #{subjectBanner},</if>
+            <if test="orderBy != null">order_by = #{orderBy},</if>
+            <if test="subjectStatus != null">subject_status = #{subjectStatus},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+            <if test="enable != null">enable = #{enable},</if>
+        </trim>
+        where subject_id = #{subjectId}
+    </update>
+
+    <delete id="deleteOcSubjectBySubjectId" parameterType="Long">
+        delete from oc_subject where subject_id = #{subjectId}
+    </delete>
+
+    <delete id="deleteOcSubjectBySubjectIds" parameterType="String">
+        delete from oc_subject where subject_id in
+        <foreach item="subjectId" collection="array" open="(" separator="," close=")">
+            #{subjectId}
+        </foreach>
+    </delete>
+</mapper>

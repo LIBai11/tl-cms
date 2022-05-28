@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OcCourseSectionMapper">
+
+    <resultMap type="OcCourseSection" id="OcCourseSectionResult">
+        <result property="sectionId" column="section_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="sectionName" column="section_name"/>
+        <result property="sectionType" column="section_type"/>
+        <result property="sectionVideo" column="section_video"/>
+        <result property="canTry" column="can_try"/>
+        <result property="orderBy" column="order_by"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createdBy" column="CREATED_BY"/>
+        <result property="createdTime" column="CREATED_TIME"/>
+        <result property="updatedBy" column="UPDATED_BY"/>
+        <result property="updatedTime" column="UPDATED_TIME"/>
+    </resultMap>
+
+    <sql id="selectOcCourseSectionVo">
+        select section_id, course_id, section_name, section_type, section_video, can_try, order_by, parent_id, remark,
+        del_flag, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from oc_course_section
+    </sql>
+
+    <select id="selectOcCourseSectionList" parameterType="OcCourseSection" resultMap="OcCourseSectionResult">
+        <include refid="selectOcCourseSectionVo"/>
+        <where>
+            <if test="courseId != null ">and course_id = #{courseId}</if>
+            <if test="sectionName != null  and sectionName != ''">and section_name like concat('%', #{sectionName},
+                '%')
+            </if>
+            <if test="sectionType != null  and sectionType != ''">and section_type = #{sectionType}</if>
+            <if test="sectionVideo != null ">and section_video = #{sectionVideo}</if>
+            <if test="canTry != null  and canTry != ''">and can_try = #{canTry}</if>
+            <if test="orderBy != null ">and order_by = #{orderBy}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="createdBy != null  and createdBy != ''">and CREATED_BY = #{createdBy}</if>
+            <if test="createdTime != null ">and CREATED_TIME = #{createdTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''">and UPDATED_BY = #{updatedBy}</if>
+            <if test="updatedTime != null ">and UPDATED_TIME = #{updatedTime}</if>
+        </where>
+    </select>
+
+    <select id="selectOcCourseSectionBySectionId" parameterType="Long" resultMap="OcCourseSectionResult">
+        <include refid="selectOcCourseSectionVo"/>
+        where section_id = #{sectionId}
+    </select>
+
+    <insert id="insertOcCourseSection" parameterType="OcCourseSection" useGeneratedKeys="true" keyProperty="sectionId">
+        insert into oc_course_section
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="sectionName != null">section_name,</if>
+            <if test="sectionType != null">section_type,</if>
+            <if test="sectionVideo != null">section_video,</if>
+            <if test="canTry != null">can_try,</if>
+            <if test="orderBy != null">order_by,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="sectionName != null">#{sectionName},</if>
+            <if test="sectionType != null">#{sectionType},</if>
+            <if test="sectionVideo != null">#{sectionVideo},</if>
+            <if test="canTry != null">#{canTry},</if>
+            <if test="orderBy != null">#{orderBy},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOcCourseSection" parameterType="OcCourseSection">
+        update oc_course_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="sectionName != null">section_name = #{sectionName},</if>
+            <if test="sectionType != null">section_type = #{sectionType},</if>
+            <if test="sectionVideo != null">section_video = #{sectionVideo},</if>
+            <if test="canTry != null">can_try = #{canTry},</if>
+            <if test="orderBy != null">order_by = #{orderBy},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where section_id = #{sectionId}
+    </update>
+
+    <delete id="deleteOcCourseSectionBySectionId" parameterType="Long">
+        delete from oc_course_section where section_id = #{sectionId}
+    </delete>
+
+    <delete id="deleteOcCourseSectionBySectionIds" parameterType="String">
+        delete from oc_course_section where section_id in
+        <foreach item="sectionId" collection="array" open="(" separator="," close=")">
+            #{sectionId}
+        </foreach>
+    </delete>
+</mapper>
